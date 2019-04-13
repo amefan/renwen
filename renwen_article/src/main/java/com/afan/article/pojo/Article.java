@@ -25,8 +25,7 @@ public class Article implements Serializable{
 	private String image;//文章封面
 	private java.util.Date createtime;//发表日期
 	private java.util.Date updatetime;//修改日期
-	private String ispublic;//是否公开
-	private String istop;//是否置顶
+
 	private Integer visits;//浏览量
 	private Integer thumbup;//点赞数
 	private Integer comment;//评论数
@@ -92,19 +91,6 @@ public class Article implements Serializable{
 		this.updatetime = updatetime;
 	}
 
-	public String getIspublic() {
-		return ispublic;
-	}
-	public void setIspublic(String ispublic) {
-		this.ispublic = ispublic;
-	}
-
-	public String getIstop() {
-		return istop;
-	}
-	public void setIstop(String istop) {
-		this.istop = istop;
-	}
 
 	public Integer getVisits() {
 		return visits;

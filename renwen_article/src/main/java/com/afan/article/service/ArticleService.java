@@ -1,9 +1,6 @@
 package com.afan.article.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -23,6 +20,13 @@ import util.IdWorker;
 
 import com.afan.article.dao.ArticleDao;
 import com.afan.article.pojo.Article;
+
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * article服务层
@@ -87,6 +91,7 @@ public class ArticleService {
 	 */
 	public void add(Article article) {
 		article.setId( idWorker.nextId()+"" );
+		article.setCreatetime(new java.util.Date());
 		articleDao.save(article);
 	}
 
@@ -122,10 +127,26 @@ public class ArticleService {
                 if (searchMap.get("id")!=null && !"".equals(searchMap.get("id"))) {
                 	predicateList.add(cb.like(root.get("id").as(String.class), "%"+(String)searchMap.get("id")+"%"));
                 }
-                // 专栏ID
-                if (searchMap.get("columnid")!=null && !"".equals(searchMap.get("columnid"))) {
-                	predicateList.add(cb.like(root.get("columnid").as(String.class), "%"+(String)searchMap.get("columnid")+"%"));
-                }
+
+                if(!"".equals(searchMap.get("starttime_1"))&&!"".equals(searchMap.get
+						("starttime_2"))&&searchMap.get("starttime_1")!=null &&searchMap.get
+						("starttime_2")!=null){
+					SimpleDateFormat sdf  = new SimpleDateFormat("yyyy-MM-dd");
+					try {
+						Date starttime_1 = sdf.parse(String.valueOf(searchMap.get
+								("starttime_1")));
+						Date starttime_2= sdf.parse(String.valueOf(searchMap.get
+								("starttime_2")));
+						predicateList.add(cb.between(root.get("createtime").as(Date.class),
+								starttime_1,starttime_2));
+					}catch (Exception e){
+						e.printStackTrace();
+					}
+
+
+
+				}
+
                 // 用户ID
                 if (searchMap.get("userid")!=null && !"".equals(searchMap.get("userid"))) {
                 	predicateList.add(cb.like(root.get("userid").as(String.class), "%"+(String)searchMap.get("userid")+"%"));
@@ -138,30 +159,12 @@ public class ArticleService {
                 if (searchMap.get("content")!=null && !"".equals(searchMap.get("content"))) {
                 	predicateList.add(cb.like(root.get("content").as(String.class), "%"+(String)searchMap.get("content")+"%"));
                 }
-                // 文章封面
-                if (searchMap.get("image")!=null && !"".equals(searchMap.get("image"))) {
-                	predicateList.add(cb.like(root.get("image").as(String.class), "%"+(String)searchMap.get("image")+"%"));
-                }
-                // 是否公开
-                if (searchMap.get("ispublic")!=null && !"".equals(searchMap.get("ispublic"))) {
-                	predicateList.add(cb.like(root.get("ispublic").as(String.class), "%"+(String)searchMap.get("ispublic")+"%"));
-                }
-                // 是否置顶
-                if (searchMap.get("istop")!=null && !"".equals(searchMap.get("istop"))) {
-                	predicateList.add(cb.like(root.get("istop").as(String.class), "%"+(String)searchMap.get("istop")+"%"));
-                }
+
                 // 审核状态
                 if (searchMap.get("state")!=null && !"".equals(searchMap.get("state"))) {
                 	predicateList.add(cb.like(root.get("state").as(String.class), "%"+(String)searchMap.get("state")+"%"));
                 }
-                // 所属频道
-                if (searchMap.get("channelid")!=null && !"".equals(searchMap.get("channelid"))) {
-                	predicateList.add(cb.like(root.get("channelid").as(String.class), "%"+(String)searchMap.get("channelid")+"%"));
-                }
-                // URL
-                if (searchMap.get("url")!=null && !"".equals(searchMap.get("url"))) {
-                	predicateList.add(cb.like(root.get("url").as(String.class), "%"+(String)searchMap.get("url")+"%"));
-                }
+
                 // 类型
                 if (searchMap.get("type")!=null && !"".equals(searchMap.get("type"))) {
                 	predicateList.add(cb.like(root.get("type").as(String.class), "%"+(String)searchMap.get("type")+"%"));
@@ -174,4 +177,7 @@ public class ArticleService {
 
 	}
 
+	public void examine(String id) {
+		articleDao.examine(id);
+	}
 }
