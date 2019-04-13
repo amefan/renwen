@@ -9,6 +9,10 @@
     <modules>
         <module>renwen_common</module>
         <module>renwen_user</module>
+		<module>renwen_article</module>
+		<module>renwen_friend</module>
+		<module>renwen_gathering</module>
+		<module>renwen_spit</module>
     </modules>
     <packaging>pom</packaging>
 	<name>renwen_parent</name>
