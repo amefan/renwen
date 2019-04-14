@@ -1,9 +1,6 @@
 package com.afan.article.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -87,6 +84,7 @@ public class CommentService {
 	 */
 	public void add(Comment comment) {
 		comment.setId( idWorker.nextId()+"" );
+		comment.setPublishdate(new Date());
 		commentDao.save(comment);
 	}
 

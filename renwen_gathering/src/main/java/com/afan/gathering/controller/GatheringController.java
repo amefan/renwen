@@ -1,4 +1,8 @@
 package com.afan.gathering.controller;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +15,8 @@ import com.afan.gathering.service.GatheringService;
 import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
+import org.springframework.web.multipart.MultipartFile;
+
 /**
  * gathering控制器层
  * @author afan
@@ -98,5 +104,38 @@ public class GatheringController {
 		gatheringService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
 	}
-	
+	/**
+	 * @Description: 上传logo
+	 * @author: afan
+	 * @param:
+	 * @return:
+	 */
+	@PostMapping("/uploadlogo")
+	public Result upload(MultipartFile file){
+		String UPLOAD_FOLDER = "E:/upload/logo/";
+
+		if (file.isEmpty()) {
+			return new Result(false,StatusCode.ERROR,"上转文件为空");
+		}
+
+		try {
+			String subfix = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf("" +
+					"."));
+			String newName = "gathering_"+System.currentTimeMillis()+subfix;
+			//System.out.println(newName);
+			byte[] bytes = file.getBytes();
+			Path path = Paths.get(UPLOAD_FOLDER + newName);
+			//如果没有files文件夹，则创建
+			if (!Files.isWritable(path)) {
+				Files.createDirectories(Paths.get(UPLOAD_FOLDER));
+			}
+			//文件写入指定路径
+			Files.write(path, bytes);
+			String url = "http://localhost/logo/"+newName;
+			return new Result(true,StatusCode.OK,"成功",url);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return new Result(false, StatusCode.ERROR, "后端异常");
+		}
+	}
 }

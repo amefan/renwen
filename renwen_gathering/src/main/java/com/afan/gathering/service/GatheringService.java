@@ -86,7 +86,8 @@ public class GatheringService {
 	 * @param gathering
 	 */
 	public void add(Gathering gathering) {
-		// gathering.setId( idWorker.nextId()+"" ); 雪花分布式ID生成器
+		gathering.setId( idWorker.nextId()+"" );
+
 		gatheringDao.save(gathering);
 	}
 

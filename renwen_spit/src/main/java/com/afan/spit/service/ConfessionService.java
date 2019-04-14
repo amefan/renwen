@@ -1,9 +1,6 @@
 package com.afan.spit.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -86,7 +83,8 @@ public class ConfessionService {
 	 * @param confession
 	 */
 	public void add(Confession confession) {
-		// confession.setId( idWorker.nextId()+"" ); 雪花分布式ID生成器
+		confession.setId( idWorker.nextId()+"" );
+		confession.setPublishtime(new Date());
 		confessionDao.save(confession);
 	}
 

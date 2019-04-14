@@ -54,6 +54,7 @@ public class CommentController {
 	 */
 	@PostMapping("/search/{page}/{size}")
 	public Result findSearch(@RequestBody Map searchMap , @PathVariable int page, @PathVariable int size){
+		System.out.println(size);
 		Page<Comment> pageList = commentService.findSearch(searchMap, page, size);
 		return  new Result(true,StatusCode.OK,"查询成功",  new PageResult<Comment>(pageList.getTotalElements(), pageList.getContent()) );
 	}

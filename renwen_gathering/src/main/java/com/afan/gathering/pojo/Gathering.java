@@ -19,7 +19,7 @@ public class Gathering implements Serializable{
 
 	
 	private String name;//活动名称
-	private String summary;//大会简介
+
 	private String detail;//详细说明
 	private String sponsor;//主办方
 	private String image;//活动图片
@@ -45,12 +45,6 @@ public class Gathering implements Serializable{
 		this.name = name;
 	}
 
-	public String getSummary() {
-		return summary;
-	}
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
 
 	public String getDetail() {
 		return detail;

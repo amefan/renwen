@@ -1,9 +1,6 @@
 package com.afan.spit.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -86,7 +83,8 @@ public class SpitService {
 	 * @param spit
 	 */
 	public void add(Spit spit) {
-		// spit.setId( idWorker.nextId()+"" ); 雪花分布式ID生成器
+		spit.setId( idWorker.nextId()+"" );
+		spit.setPublishtime(new Date());
 		spitDao.save(spit);
 	}
 

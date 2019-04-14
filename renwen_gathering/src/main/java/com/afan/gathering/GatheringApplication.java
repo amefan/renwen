@@ -4,10 +4,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import util.IdWorker;
 @SpringBootApplication
-public class FriendApplication {
+public class GatheringApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FriendApplication.class, args);
+		SpringApplication.run(GatheringApplication.class, args);
 	}
 
 	@Bean
