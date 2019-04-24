@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  *
  */
 public interface UserGathDao extends JpaRepository<UserGath,String>,JpaSpecificationExecutor<UserGath> {
+
+       Integer countByGathid(String gathid);
 }

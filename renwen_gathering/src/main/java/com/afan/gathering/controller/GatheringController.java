@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
+import com.afan.gathering.pojo.UserGath;
+import com.afan.gathering.service.UserGathService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -138,4 +140,6 @@ public class GatheringController {
 			return new Result(false, StatusCode.ERROR, "后端异常");
 		}
 	}
+
+
 }

@@ -9,6 +9,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 
+import com.afan.spit.dao.SpitDao;
+import com.afan.spit.pojo.Spit;
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +39,9 @@ public class CommentService {
 	@Autowired
 	private IdWorker idWorker;
 
+	@Autowired
+	private SpitDao spitDao;
+
 	/**
 	 * 查询全部列表
 	 * @return
@@ -44,7 +50,10 @@ public class CommentService {
 		return commentDao.findAll();
 	}
 
-	
+	public List<Comment> findByspitId(String id){
+
+		return commentDao.findCommentsBySpitid(id);
+	}
 	/**
 	 * 条件查询+分页
 	 * @param whereMap
@@ -54,7 +63,8 @@ public class CommentService {
 	 */
 	public Page<Comment> findSearch(Map whereMap, int page, int size) {
 		Specification<Comment> specification = createSpecification(whereMap);
-		PageRequest pageRequest =  PageRequest.of(page-1, size);
+		Sort sort = new Sort(Sort.Direction.DESC,"publishdate");
+		PageRequest pageRequest =  PageRequest.of(page-1,size,sort);
 		return commentDao.findAll(specification, pageRequest);
 	}
 
@@ -85,6 +95,9 @@ public class CommentService {
 	public void add(Comment comment) {
 		comment.setId( idWorker.nextId()+"" );
 		comment.setPublishdate(new Date());
+		Spit spit = spitDao.findById(comment.getSpitid()).get();
+		spit.setComment(spit.getComment()+1);
+		spitDao.save(spit);
 		commentDao.save(comment);
 	}
 

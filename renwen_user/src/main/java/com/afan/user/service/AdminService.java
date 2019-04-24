@@ -142,4 +142,11 @@ public class AdminService {
 
 	}
 
+	public Admin login(String loginname, String password) {
+		Admin admin = adminDao.findAdminByLoginname(loginname);
+		if(password.equals(admin.getPassword())){
+			return admin ;
+		}
+			return null;
+	}
 }

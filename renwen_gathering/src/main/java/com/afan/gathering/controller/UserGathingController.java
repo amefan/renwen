@@ -80,7 +80,7 @@ public class UserGathingController {
 	@PostMapping()
 	public Result add(@RequestBody UserGath userGath  ){
 		userGathService.add(userGath);
-		return new Result(true,StatusCode.OK,"增加成功");
+		return new Result(true,StatusCode.OK,"报名成功");
 	}
 
 	/**
@@ -102,6 +102,13 @@ public class UserGathingController {
 	public Result delete(@PathVariable String id){
 		userGathService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
+	}
+
+	@GetMapping("/countgath/{gathid}")
+	public Result countByGathid(@PathVariable String gathid){
+		Integer count = userGathService.countByGathid(gathid);
+
+		return new Result(true,  StatusCode.OK,"查新成功",count);
 	}
 
 }

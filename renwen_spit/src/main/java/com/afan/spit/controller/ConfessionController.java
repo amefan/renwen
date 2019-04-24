@@ -2,6 +2,7 @@ package com.afan.spit.controller;
 import java.util.List;
 import java.util.Map;
 
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,8 @@ import com.afan.spit.service.ConfessionService;
 import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
+import util.JwtUtil;
+
 /**
  * confession控制器层
  * @author afan
@@ -24,7 +27,8 @@ public class ConfessionController {
 	@Autowired
 	private ConfessionService confessionService;
 	
-	
+	@Autowired
+	private JwtUtil jwtUtil;
 	/**
 	 * 查询全部数据
 	 * @return
@@ -54,6 +58,7 @@ public class ConfessionController {
 	 */
 	@PostMapping("/search/{page}/{size}")
 	public Result findSearch(@RequestBody Map searchMap , @PathVariable int page, @PathVariable int size){
+
 		Page<Confession> pageList = confessionService.findSearch(searchMap, page, size);
 		return  new Result(true,StatusCode.OK,"查询成功",  new PageResult<Confession>(pageList.getTotalElements(), pageList.getContent()) );
 	}
@@ -74,8 +79,10 @@ public class ConfessionController {
 	 */
 	@PostMapping()
 	public Result add(@RequestBody Confession confession  ){
+		Claims claims = jwtUtil.parseJWT(confession.getUserid());
+		confession.setUserid(claims.getId());
 		confessionService.add(confession);
-		return new Result(true,StatusCode.OK,"增加成功");
+		return new Result(true,StatusCode.OK,"恭喜您，表白成功！");
 	}
 	
 	/**

@@ -99,5 +99,19 @@ public class AdminController {
 		adminService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
 	}
-	
+
+	/**
+	 * @Description: 处理管理员登录
+	 * @author: afan
+	 * @param: [map]
+	 * @return: entity.Result
+	 */
+	@PostMapping("/login")
+	public Result login(@RequestBody Map<String,String> map){
+		Admin admin = adminService.login(map.get("loginname"),map.get("password"));
+		if (admin==null){
+			return new Result(false,StatusCode.ERROR,"管理员不存在");
+		}
+		return new Result(true,StatusCode.OK,"登录成功");
+	}
 }

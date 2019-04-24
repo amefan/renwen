@@ -2,26 +2,20 @@ package com.afan.article.service;
 
 
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
-
+import com.afan.article.dao.ShareDao;
+import com.afan.article.pojo.Share;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import util.IdWorker;
 
-import com.afan.article.dao.ArticleDao;
-import com.afan.article.pojo.Article;
-
-
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,17 +23,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * article服务层
+ * share服务层
  * 
  * @author afan
  *
  */
 @Service
-public class ArticleService {
+public class ShareService {
 
 	@Autowired
-	private ArticleDao articleDao;
-	
+	private ShareDao shareDao;
+
 	@Autowired
 	private IdWorker idWorker;
 
@@ -47,11 +41,11 @@ public class ArticleService {
 	 * 查询全部列表
 	 * @return
 	 */
-	public List<Article> findAll() {
-		return articleDao.findAll();
+	public List<Share> findAll() {
+		return shareDao.findAll();
 	}
 
-	
+
 	/**
 	 * 条件查询+分页
 	 * @param whereMap
@@ -59,21 +53,22 @@ public class ArticleService {
 	 * @param size
 	 * @return
 	 */
-	public Page<Article> findSearch(Map whereMap, int page, int size) {
-		Specification<Article> specification = createSpecification(whereMap);
-		PageRequest pageRequest =  PageRequest.of(page-1, size); // 构造分页
-		return articleDao.findAll(specification, pageRequest);
+	public Page<Share> findSearch(Map whereMap, int page, int size) {
+		Specification<Share> specification = createSpecification(whereMap);
+		Sort sort = new Sort(Sort.Direction.DESC,"publishtime");
+		PageRequest pageRequest =  PageRequest.of(page-1, size,sort); // 构造分页
+		return shareDao.findAll(specification, pageRequest);
 	}
 
-	
+
 	/**
 	 * 条件查询
 	 * @param whereMap
 	 * @return
 	 */
-	public List<Article> findSearch(Map whereMap) {
-		Specification<Article> specification = createSpecification(whereMap);
-		return articleDao.findAll(specification);
+	public List<Share> findSearch(Map whereMap) {
+		Specification<Share> specification = createSpecification(whereMap);
+		return shareDao.findAll(specification);
 	}
 
 	/**
@@ -81,26 +76,30 @@ public class ArticleService {
 	 * @param id
 	 * @return
 	 */
-	public Article findById(String id) {
-		return articleDao.findById(id).get();
+	public Share findById(String id) {
+		return shareDao.findById(id).get();
 	}
 
 	/**
 	 * 增加
-	 * @param article
+	 * @param share
 	 */
-	public void add(Article article) {
-		article.setId( idWorker.nextId()+"" );
-		article.setCreatetime(new java.util.Date());
-		articleDao.save(article);
+	public void add(Share share) {
+		share.setId( idWorker.nextId()+"" );
+		share.setComment(0);
+		share.setState("1");
+		share.setVisits(0);
+		share.setThumbup(0);
+		share.setPublishtime(new Date());
+		shareDao.save(share);
 	}
 
 	/**
 	 * 修改
-	 * @param article
+	 * @param share
 	 */
-	public void update(Article article) {
-		articleDao.save(article);
+	public void update(Share share) {
+		shareDao.save(share);
 	}
 
 	/**
@@ -108,7 +107,7 @@ public class ArticleService {
 	 * @param id
 	 */
 	public void deleteById(String id) {
-		articleDao.deleteById(id);
+		shareDao.deleteById(id);
 	}
 
 	/**
@@ -116,8 +115,8 @@ public class ArticleService {
 	 * @param searchMap
 	 * @return
 	 */
-	private Specification<Article> createSpecification(Map searchMap) {
-		return new Specification<Article>() {
+	private Specification<Share> createSpecification(Map searchMap) {
+		return new Specification<Share>() {
 			/**
 			 * @Description:
 			 * @author: afan
@@ -128,7 +127,7 @@ public class ArticleService {
 			 * @return: javax.persistence.criteria.Predicate
 			 */
 			@Override
-			public Predicate toPredicate(Root<Article> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+			public Predicate toPredicate(Root<Share> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicateList = new ArrayList<Predicate>(); //创建条件来存放多个条件
                 //判断是否传入此条件
                 if(!"".equals(searchMap.get("starttime_1"))&&!"".equals(searchMap.get
@@ -161,10 +160,7 @@ public class ArticleService {
                 	predicateList.add(cb.like(root.get("state").as(String.class), "%"+(String)searchMap.get("state")+"%"));
                 }
 
-                // 类型
-                if (searchMap.get("type")!=null && !"".equals(searchMap.get("type"))) {
-                	predicateList.add(cb.like(root.get("type").as(String.class), "%"+(String)searchMap.get("type")+"%"));
-                }
+
 				
 				return cb.and( predicateList.toArray(new Predicate[predicateList.size()]));
 
@@ -173,7 +169,5 @@ public class ArticleService {
 
 	}
 
-	public void examine(String id) {
-		articleDao.examine(id);
-	}
+
 }

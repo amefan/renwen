@@ -1,21 +1,20 @@
 package com.afan.article.controller;
+
+import com.afan.article.pojo.Share;
+import com.afan.article.service.ShareService;
+import entity.PageResult;
+import entity.Result;
+import entity.StatusCode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.*;
-import com.afan.article.pojo.Article;
-import com.afan.article.service.ArticleService;
-
-import entity.PageResult;
-import entity.Result;
-import entity.StatusCode;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * article控制器层
@@ -24,11 +23,11 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @CrossOrigin
-@RequestMapping("/article")
-public class ArticleController {
+@RequestMapping("/share")
+public class ShareController {
 
 	@Autowired
-	private ArticleService articleService;
+	private ShareService shareService;
 	
 	
 	/**
@@ -37,7 +36,7 @@ public class ArticleController {
 	 */
 	@GetMapping()
 	public Result findAll(){
-		return new Result(true,StatusCode.OK,"查询成功",articleService.findAll());
+		return new Result(true,StatusCode.OK,"查询成功",shareService.findAll());
 	}
 	
 	/**
@@ -47,7 +46,7 @@ public class ArticleController {
 	 */
 	@GetMapping("/{id}")
 	public Result findById(@PathVariable String id){
-		return new Result(true,StatusCode.OK,"查询成功",articleService.findById(id));
+		return new Result(true,StatusCode.OK,"查询成功",shareService.findById(id));
 	}
 
 
@@ -60,8 +59,8 @@ public class ArticleController {
 	 */
 	@PostMapping("/search/{page}/{size}")
 	public Result findSearch(@RequestBody Map searchMap , @PathVariable int page, @PathVariable int size){
-		Page<Article> pageList = articleService.findSearch(searchMap, page, size);
-		return  new Result(true,StatusCode.OK,"查询成功",  new PageResult<Article>(pageList.getTotalElements(), pageList.getContent()) );
+		Page<Share> pageList = shareService.findSearch(searchMap, page, size);
+		return  new Result(true,StatusCode.OK,"查询成功",  new PageResult<Share>(pageList.getTotalElements(), pageList.getContent()) );
 	}
 
 	/**
@@ -71,7 +70,7 @@ public class ArticleController {
      */
     @PostMapping("/search")
     public Result findSearch( @RequestBody Map searchMap){
-        return new Result(true,StatusCode.OK,"查询成功",articleService.findSearch(searchMap));
+        return new Result(true,StatusCode.OK,"查询成功",shareService.findSearch(searchMap));
     }
 	
 	/**
@@ -79,9 +78,9 @@ public class ArticleController {
 	 * @param article
 	 */
 	@PostMapping()
-	public Result add(@RequestBody Article article  ){
-		articleService.add(article);
-		return new Result(true,StatusCode.OK,"增加成功");
+	public Result add(@RequestBody Share article  ){
+		shareService.add(article);
+		return new Result(true,StatusCode.OK,"发布成功");
 	}
 	
 	/**
@@ -89,9 +88,9 @@ public class ArticleController {
 	 * @param article
 	 */
 	@PutMapping("/{id}")
-	public Result update(@RequestBody Article article, @PathVariable String id ){
+	public Result update(@RequestBody Share article, @PathVariable String id ){
 		article.setId(id);
-		articleService.update(article);
+		shareService.update(article);
 		return new Result(true,StatusCode.OK,"修改成功");
 	}
 	
@@ -101,7 +100,7 @@ public class ArticleController {
 	 */
 	@DeleteMapping("/{id}")
 	public Result delete(@PathVariable String id){
-		articleService.deleteById(id);
+		shareService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
 	}
 	/**
@@ -138,17 +137,6 @@ public class ArticleController {
 			return new Result(false, StatusCode.ERROR, "后端异常");
 		}
 	}
-	/**
-	 * @Description: 审核
-	 * @author: afan
-	 * @param: [id]
-	 * @return: entity.Result
-	 */
-	@PutMapping("/examine/{id}")
-	public Result examine(@PathVariable String id){
-		System.out.println(id);
-		articleService.examine(id);
-		return new Result(true, StatusCode.OK, "审核成功");
-	}
+
 
 }

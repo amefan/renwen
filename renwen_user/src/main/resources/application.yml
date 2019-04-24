@@ -11,3 +11,9 @@ spring:
   jpa: 
     database: MySQL
     show-sql: true
+  redis:
+    host: 127.0.0.1
+jwt:
+  config:
+    key: afan
+    ttl: 360000

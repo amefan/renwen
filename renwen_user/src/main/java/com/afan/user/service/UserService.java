@@ -1,22 +1,19 @@
 package com.afan.user.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
 
+import com.afan.user.utils.SmsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import util.IdWorker;
@@ -39,6 +36,39 @@ public class UserService {
 	@Autowired
 	private IdWorker idWorker;
 
+	@Autowired
+	private RedisTemplate redisTemplate;
+
+	@Autowired
+	private BCryptPasswordEncoder encoder;
+	/**
+	 * @Description: 发送短信
+	 * @author: afan
+	 * @param: [mobile]
+	 * @return: void
+	 */
+	public void sendSms(String mobile)  {
+		// 随机生成6位验证码
+		Random random = new Random();
+		int max = 999999;
+		int min = 100000; // 验证码最大最小值
+		int smsCode = random.nextInt(max);
+		if (smsCode<min){
+			smsCode = min+smsCode;
+		}
+		try {
+			// 存到缓存中
+			redisTemplate.opsForValue().set("smscode_"+mobile,smsCode);
+			SmsUtil.sendSms(mobile,String.valueOf(smsCode));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("验证码："+ smsCode);
+
+
+
+
+	}
 	/**
 	 * 查询全部列表
 	 * @return
@@ -86,7 +116,9 @@ public class UserService {
 	 * @param user
 	 */
 	public void add(User user) {
-		// user.setId( idWorker.nextId()+"" ); 雪花分布式ID生成器
+		user.setId( idWorker.nextId()+"" );
+		user.setFanscount(0);
+		user.setFollowcount(0);
 		userDao.save(user);
 	}
 
@@ -173,5 +205,41 @@ public class UserService {
 		};
 
 	}
+	/**
+	 * @Description: 注册
+	 * @author: afan
+	 * @param: [user, code]
+	 * @return: void
+	 */
+	public void register(User user, String code) {
+		System.out.println(user.toString());
+		String syscode = String.valueOf(redisTemplate.opsForValue().get("smscode_" + user
+				.getMobile()));
+		if(syscode==null){
+			throw new  RuntimeException("请获取短信验证码");
+		}
 
+		if(!syscode.equals(code)){
+			throw new  RuntimeException("输入的验证码有误，重新输入");
+		}
+		String newPass = encoder.encode(user.getPassword()); // 加密密码
+		user.setPassword(newPass);
+		user.setId(idWorker.nextId()+"");
+		user.setFollowcount(0);//关注数        
+		user.setFanscount(0);//粉丝数        
+		user.setAvatar("http://localhost/logo/logo_1555158843139.jpg");
+		user.setRegdate(new Date());//注册日期        
+
+		userDao.save(user);
+		redisTemplate.delete("smscode_" + user.getMobile());
+	}
+
+	public User checkLogin(String mobile,String password){
+		User user = userDao.findByMobile(mobile);
+		System.out.println(mobile+" "+password);
+		if (user != null&& encoder.matches(password,user.getPassword())) {
+			return user;
+		}
+		return null;
+	}
 }

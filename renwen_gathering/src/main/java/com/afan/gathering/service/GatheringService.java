@@ -57,8 +57,11 @@ public class GatheringService {
 	 */
 	public Page<Gathering> findSearch(Map whereMap, int page, int size) {
 		Specification<Gathering> specification = createSpecification(whereMap);
-		PageRequest pageRequest =  PageRequest.of(page-1, size);
+		Sort sort = new Sort(Sort.Direction.DESC,"starttime");
+		PageRequest pageRequest =  PageRequest.of(page-1, size,sort);
+
 		return gatheringDao.findAll(specification, pageRequest);
+
 	}
 
 	
@@ -120,6 +123,7 @@ public class GatheringService {
 			public Predicate toPredicate(Root<Gathering> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicateList = new ArrayList<Predicate>();
                 // 编号
+
                 if (searchMap.get("id")!=null && !"".equals(searchMap.get("id"))) {
                 	predicateList.add(cb.like(root.get("id").as(String.class), "%"+(String)searchMap.get("id")+"%"));
                 }

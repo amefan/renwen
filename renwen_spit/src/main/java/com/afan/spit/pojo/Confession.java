@@ -17,13 +17,31 @@ public class Confession implements Serializable{
 	private String id;//主键
 
 
-	
+	private String fromuser ;//被表白人
+	private String touser; //
 	private String content;//内容
 	private java.util.Date publishtime;//发布时间
 	private String userid;//发布人Id
 	private String state;//1 可见，0不可见
 
-	
+	public String getFromuser() {
+		return fromuser;
+	}
+
+	public void setFromuser(String fromuser) {
+		this.fromuser = fromuser;
+	}
+
+
+
+	public String getTouser() {
+		return touser;
+	}
+
+	public void setTouser(String touser) {
+		this.touser = touser;
+	}
+
 	public String getId() {
 		return id;
 	}

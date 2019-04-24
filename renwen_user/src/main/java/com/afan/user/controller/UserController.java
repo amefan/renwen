@@ -1,4 +1,5 @@
 package com.afan.user.controller;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,8 @@ import com.afan.user.service.UserService;
 import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
+import util.JwtUtil;
+
 /**
  * user控制器层
  * @author afan
@@ -24,7 +27,8 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-	
+	@Autowired
+	private JwtUtil jwtUtil;
 	
 	/**
 	 * 查询全部数据
@@ -99,5 +103,51 @@ public class UserController {
 		userService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
 	}
-	
+	/**
+	 * @Description: 发送短信
+	 * @author: afan
+	 * @param: [moblie]
+	 * @return: entity.Result
+	 */
+	@PostMapping("/sendsms/{mobile}")
+	public Result sendSms(@PathVariable String mobile){
+		System.out.println(mobile);
+		userService.sendSms(mobile);
+		return new Result(true,StatusCode.OK,"发送成功");
+	}
+
+	/**
+	 * @Description: 用户登录
+	 * @author: afan
+	 * @param: [mobile, password]
+	 * @return: entity.Result
+	 */
+	@PostMapping("/login")
+	public Result login(@RequestBody Map<String,String> map ){
+		User user = userService.checkLogin(map.get("mobile"),map.get("password") );
+		if (user==null){
+			return new Result(false,StatusCode.ERROR,"用户名或密码错误！");
+		}
+		String token = jwtUtil.createJWT(user.getId(), user.getNickname(), "user");
+
+		Map map1=new HashMap();
+		map1.put("token",token);
+		map1.put("name",user.getNickname());//昵称
+		map1.put("avatar",user.getAvatar());//头像
+		return new Result(true,StatusCode.OK,"登录成功",map1);
+
+	}
+
+	/**
+	 * @Description: 用户注册
+	 * @author: afan
+	 * @param: [user, code]
+	 * @return: entity.Result
+	 */
+	@PostMapping("/register/{code}")
+	public Result register(@RequestBody User user,@PathVariable String code){
+		//System.out.println(user.getMobile()+user.getNickname()+code);
+		userService.register(user,code);
+		return new Result(true,StatusCode.OK,"注册成功");
+	}
 }

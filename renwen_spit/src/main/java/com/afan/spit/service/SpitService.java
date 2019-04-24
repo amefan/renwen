@@ -54,7 +54,8 @@ public class SpitService {
 	 */
 	public Page<Spit> findSearch(Map whereMap, int page, int size) {
 		Specification<Spit> specification = createSpecification(whereMap);
-		PageRequest pageRequest =  PageRequest.of(page-1, size);
+		Sort sort = new Sort(Sort.Direction.DESC,"publishtime");
+		PageRequest pageRequest =  PageRequest.of(page-1,size,sort);
 		return spitDao.findAll(specification, pageRequest);
 	}
 
@@ -75,7 +76,10 @@ public class SpitService {
 	 * @return
 	 */
 	public Spit findById(String id) {
-		return spitDao.findById(id).get();
+		Spit spit = spitDao.findById(id).get();
+		spit.setVisits(spit.getVisits()+1);
+		spitDao.save(spit);
+		return spit;
 	}
 
 	/**
@@ -85,6 +89,9 @@ public class SpitService {
 	public void add(Spit spit) {
 		spit.setId( idWorker.nextId()+"" );
 		spit.setPublishtime(new Date());
+		spit.setVisits(0);
+		spit.setThumbup(0);
+		spit.setComment(0);
 		spitDao.save(spit);
 	}
 
@@ -148,4 +155,9 @@ public class SpitService {
 
 	}
 
+	public void updateThumbup(String id) {
+		Spit spit = spitDao.findById(id).get();
+		spit.setThumbup(spit.getThumbup()+1);
+		spitDao.save(spit);
+	}
 }

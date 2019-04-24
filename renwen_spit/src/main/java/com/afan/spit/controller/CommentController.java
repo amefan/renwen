@@ -2,6 +2,7 @@ package com.afan.spit.controller;
 import java.util.List;
 import java.util.Map;
 
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,8 @@ import com.afan.spit.service.CommentService;
 import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
+import util.JwtUtil;
+
 /**
  * comment控制器层
  * @author afan
@@ -43,7 +46,15 @@ public class CommentController {
 	public Result findById(@PathVariable String id){
 		return new Result(true,StatusCode.OK,"查询成功",commentService.findById(id));
 	}
-
+	/**
+	 * 根据ID查询
+	 * @param id ID
+	 * @return
+	 */
+	@GetMapping("/spit/{id}")
+	public Result findByspit(@PathVariable String id){
+		return new Result(true,StatusCode.OK,"查询成功",commentService.findByspitId(id));
+	}
 
 	/**
 	 * 分页+多条件查询
@@ -67,15 +78,28 @@ public class CommentController {
     public Result findSearch( @RequestBody Map searchMap){
         return new Result(true,StatusCode.OK,"查询成功",commentService.findSearch(searchMap));
     }
-	
+
+    @Autowired
+  private JwtUtil jwtUtil;
 	/**
 	 * 增加
-	 * @param comment
+	 * @param
 	 */
 	@PostMapping()
-	public Result add(@RequestBody Comment comment  ){
+	public Result add(@RequestBody Map<String,String> map  ){
+		Comment comment = new Comment();
+		String token = map.get("token");
+		System.out.println(token);
+		Claims claims = jwtUtil.parseJWT(token);//解析token
+
+		String userid = claims.getId();
+		String nickename = claims.getSubject();
+		comment.setContent(map.get("content"));
+		comment.setSpitid(map.get("parentid"));
+		comment.setUserid(userid);
+		comment.setNickname(nickename);
 		commentService.add(comment);
-		return new Result(true,StatusCode.OK,"增加成功");
+		return new Result(true,StatusCode.OK,"评论成功");
 	}
 	
 	/**

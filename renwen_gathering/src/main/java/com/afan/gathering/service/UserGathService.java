@@ -135,4 +135,14 @@ public class UserGathService {
 		};
 
 	}
+
+		/**
+		 * @Description: 根据活动Id查询报名人数
+		 * @author: afan
+		 * @param: [gathid]
+		 * @return: java.lang.Integer
+		 */
+	public Integer countByGathid(String gathid){
+		return userGathDao.countByGathid(gathid);
+	}
 }

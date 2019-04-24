@@ -54,7 +54,8 @@ public class ConfessionService {
 	 */
 	public Page<Confession> findSearch(Map whereMap, int page, int size) {
 		Specification<Confession> specification = createSpecification(whereMap);
-		PageRequest pageRequest =  PageRequest.of(page-1, size);
+		Sort sort = new Sort(Sort.Direction.DESC,"publishtime");
+		PageRequest pageRequest =  PageRequest.of(page-1, size,sort);
 		return confessionDao.findAll(specification, pageRequest);
 	}
 
@@ -83,8 +84,12 @@ public class ConfessionService {
 	 * @param confession
 	 */
 	public void add(Confession confession) {
+		if(confession.getFromuser()==null||"".equals(confession.getFromuser())){
+			confession.setFromuser("匿名用户");
+		}
 		confession.setId( idWorker.nextId()+"" );
 		confession.setPublishtime(new Date());
+
 		confessionDao.save(confession);
 	}
 
