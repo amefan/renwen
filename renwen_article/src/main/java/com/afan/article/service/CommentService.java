@@ -9,6 +9,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 
+import com.afan.article.dao.ShareDao;
+import com.afan.article.pojo.Share;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +37,9 @@ public class CommentService {
 	
 	@Autowired
 	private IdWorker idWorker;
+
+	@Autowired
+	private ShareDao shareDao;
 
 	/**
 	 * 查询全部列表
@@ -85,6 +90,10 @@ public class CommentService {
 	public void add(Comment comment) {
 		comment.setId( idWorker.nextId()+"" );
 		comment.setPublishdate(new Date());
+		Share share = shareDao.findById(comment.getArticleid()).get();
+		share.setVisits(share.getVisits()+1);
+		share.setComment(share.getComment()+1);
+		shareDao.save(share);
 		commentDao.save(comment);
 	}
 

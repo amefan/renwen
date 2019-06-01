@@ -14,3 +14,14 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  redis:
+    host: 127.0.0.1
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:6868/eureka #,http://eureka7002.com:7002/eureka/,
+      #http://eureka7002.com:7002/eureka/
+      #将服务注册进eureka集群
+  instance:
+    instance-id: renwen-article
+    prefer-ip-address: true #显示IP地址

@@ -9,8 +9,8 @@
         <outputRelativeToContentRoot value="true" />
         <module name="renwen_article" />
         <module name="renwen_common" />
-        <module name="renwen_friend" />
         <module name="renwen_gathering" />
+        <module name="renwen_server" />
         <module name="renwen_spit" />
         <module name="renwen_user" />
       </profile>
@@ -18,9 +18,11 @@
     <bytecodeTargetLevel>
       <module name="renwen_article" target="1.8" />
       <module name="renwen_common" target="1.8" />
+      <module name="renwen_eureka" target="1.8" />
       <module name="renwen_friend" target="1.8" />
       <module name="renwen_gathering" target="1.8" />
       <module name="renwen_parent" target="1.8" />
+      <module name="renwen_server" target="1.8" />
       <module name="renwen_spit" target="1.8" />
       <module name="renwen_user" target="1.8" />
     </bytecodeTargetLevel>

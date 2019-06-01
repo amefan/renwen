@@ -2,10 +2,16 @@ package com.afan.article.service;
 
 
 
+import com.afan.article.dao.CommentDao;
 import com.afan.article.dao.ShareDao;
+import com.afan.article.pojo.Comment;
+import com.afan.article.pojo.CommentExample;
 import com.afan.article.pojo.Share;
+import com.afan.article.pojo.ShareExample;
+import com.afan.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,10 +23,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * share服务层
@@ -37,6 +40,11 @@ public class ShareService {
 	@Autowired
 	private IdWorker idWorker;
 
+	@Autowired
+	private CommentDao commentDao;
+
+//	@Autowired
+//	private UserService userService;
 	/**
 	 * 查询全部列表
 	 * @return
@@ -53,11 +61,51 @@ public class ShareService {
 	 * @param size
 	 * @return
 	 */
-	public Page<Share> findSearch(Map whereMap, int page, int size) {
+	public List<ShareExample> findSearch(Map whereMap, int page, int size) {
 		Specification<Share> specification = createSpecification(whereMap);
 		Sort sort = new Sort(Sort.Direction.DESC,"publishtime");
 		PageRequest pageRequest =  PageRequest.of(page-1, size,sort); // 构造分页
-		return shareDao.findAll(specification, pageRequest);
+		Page<Share> pageList = shareDao.findAll(specification, pageRequest); //查询分页内容
+
+		List<ShareExample> sharelist = new ArrayList<>();
+		List<Share> list = pageList.getContent();// 获取分页内容
+		for (Share share : list) {
+			ShareExample shareExample = new ShareExample();
+			shareExample.setComment(share.getComment());
+			shareExample.setContent(share.getContent());
+			shareExample.setId(share.getId());
+			shareExample.setUserid(share.getUserid());
+			shareExample.setVisits(share.getVisits());
+			shareExample.setThumbup(share.getThumbup());
+			shareExample.setPublishtime(share.getPublishtime());
+			shareExample.setImgs(Arrays.asList(share.getImgs().split(",")));
+			shareExample.setAvater(share.getAvatar());
+			shareExample.setUsername(share.getUsername());
+			// 封装评论
+			List<Comment> comentList = commentDao.findCommentsByArticleidAndParentid(share.getId(),
+					"0");
+			List<CommentExample> cxList = new ArrayList<>();
+			for (Comment comment : comentList) {
+				CommentExample cex = new CommentExample();
+				cex.setId(comment.getId());
+				cex.setAvatar(comment.getAvatar());
+				cex.setContent(comment.getContent());
+				cex.setNickname(comment.getNickname());
+				cex.setPublishdate(comment.getPublishdate());
+
+				List<Comment> childlist = commentDao.findCommentsByArticleidAndParentid(share
+								.getId(),
+						comment.getId());
+
+				cex.setChildcomment(childlist);
+				cxList.add(cex);
+			}
+            shareExample.setComments(cxList);
+
+			sharelist.add(shareExample);
+		}
+
+		return sharelist;
 	}
 
 
@@ -160,7 +208,15 @@ public class ShareService {
                 	predicateList.add(cb.like(root.get("state").as(String.class), "%"+(String)searchMap.get("state")+"%"));
                 }
 
+				// 审核状态
+				if (searchMap.get("content")!=null && !"".equals(searchMap.get("content"))) {
+					predicateList.add(cb.like(root.get("content").as(String.class), "%"+(String)searchMap.get("content")+"%"));
+				}
 
+				// 审核状态
+				if (searchMap.get("username")!=null && !"".equals(searchMap.get("username"))) {
+					predicateList.add(cb.like(root.get("username").as(String.class), "%"+(String)searchMap.get("username")+"%"));
+				}
 				
 				return cb.and( predicateList.toArray(new Predicate[predicateList.size()]));
 
@@ -170,4 +226,10 @@ public class ShareService {
 	}
 
 
+	public void updateThumbup(String id) {
+		Share share = shareDao.findById(id).get();
+		share.setVisits(share.getVisits()+1);
+		share.setThumbup(share.getThumbup()+1);
+		shareDao.save(share);
+	}
 }

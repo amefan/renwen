@@ -25,7 +25,16 @@ public class Comment implements Serializable{
 	private java.util.Date publishdate;//发布时间
 	private String nickname;//昵称
 
-	
+	private String avatar;
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
 	public String getId() {
 		return id;
 	}

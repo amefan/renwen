@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -149,5 +150,24 @@ public class UserController {
 		//System.out.println(user.getMobile()+user.getNickname()+code);
 		userService.register(user,code);
 		return new Result(true,StatusCode.OK,"注册成功");
+	}
+
+	@PostMapping("/toself")
+	public Result toself(@RequestBody Map map){
+		Claims claims = jwtUtil.parseJWT((String) map.get("token"));
+		User user = userService.findById(claims.getId());
+		return new Result(true,StatusCode.OK,"查询成功",user);
+	}
+    @GetMapping("/online")
+	public Result GetOnline(){
+		List<User> list = userService.GetOnlineUser();
+
+		return new Result(true,StatusCode.OK,"查询成功",list);
+
+	}
+    @GetMapping("/checkphone/{phone}")
+	public Result checkPhone(@PathVariable String phone){
+		boolean b = userService.checkPhone(phone);
+		return new Result(b,StatusCode.OK,"查询成功");
 	}
 }

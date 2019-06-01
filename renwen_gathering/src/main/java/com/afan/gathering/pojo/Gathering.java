@@ -23,10 +23,10 @@ public class Gathering implements Serializable{
 	private String detail;//详细说明
 	private String sponsor;//主办方
 	private String image;//活动图片
-	private java.util.Date starttime;//开始时间
-	private java.util.Date endtime;//截止时间
+	private String starttime;//开始时间
+	private String endtime;//截止时间
 	private String address;//举办地点
-	private java.util.Date enrolltime;//报名截止
+	private String enrolltime;//报名截止
 	private String state;//是否可见
 	private String city;//城市
 
@@ -67,31 +67,35 @@ public class Gathering implements Serializable{
 		this.image = image;
 	}
 
-	public java.util.Date getStarttime() {
+	public String getStarttime() {
 		return starttime;
 	}
-	public void setStarttime(java.util.Date starttime) {
+
+	public void setStarttime(String starttime) {
 		this.starttime = starttime;
 	}
 
-	public java.util.Date getEndtime() {
+	public String getEndtime() {
 		return endtime;
 	}
-	public void setEndtime(java.util.Date endtime) {
+
+	public void setEndtime(String endtime) {
 		this.endtime = endtime;
 	}
 
 	public String getAddress() {
 		return address;
 	}
+
 	public void setAddress(String address) {
 		this.address = address;
 	}
 
-	public java.util.Date getEnrolltime() {
+	public String getEnrolltime() {
 		return enrolltime;
 	}
-	public void setEnrolltime(java.util.Date enrolltime) {
+
+	public void setEnrolltime(String enrolltime) {
 		this.enrolltime = enrolltime;
 	}
 

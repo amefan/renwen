@@ -2,6 +2,7 @@ package com.afan.article.controller;
 import java.util.List;
 import java.util.Map;
 
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,8 @@ import com.afan.article.service.CommentService;
 import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
+import util.JwtUtil;
+
 /**
  * comment控制器层
  * @author afan
@@ -23,8 +26,10 @@ public class CommentController {
 
 	@Autowired
 	private CommentService commentService;
-	
-	
+
+	@Autowired
+	private JwtUtil jwtUtil;
+
 	/**
 	 * 查询全部数据
 	 * @return
@@ -75,8 +80,10 @@ public class CommentController {
 	 */
 	@PostMapping()
 	public Result add(@RequestBody Comment comment  ){
+		Claims claims = jwtUtil.parseJWT(comment.getUserid());
+		comment.setUserid(claims.getId());
 		commentService.add(comment);
-		return new Result(true,StatusCode.OK,"增加成功");
+		return new Result(true,StatusCode.OK,"评论成功");
 	}
 	
 	/**

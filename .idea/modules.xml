@@ -4,9 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/renwen_article/renwen_article.iml" filepath="$PROJECT_DIR$/renwen_article/renwen_article.iml" />
       <module fileurl="file://$PROJECT_DIR$/renwen_common/renwen_common.iml" filepath="$PROJECT_DIR$/renwen_common/renwen_common.iml" />
-      <module fileurl="file://$PROJECT_DIR$/renwen_friend/renwen_friend.iml" filepath="$PROJECT_DIR$/renwen_friend/renwen_friend.iml" />
       <module fileurl="file://$PROJECT_DIR$/renwen_gathering/renwen_gathering.iml" filepath="$PROJECT_DIR$/renwen_gathering/renwen_gathering.iml" />
       <module fileurl="file://$PROJECT_DIR$/renwen_parent.iml" filepath="$PROJECT_DIR$/renwen_parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/renwen_server/renwen_server.iml" filepath="$PROJECT_DIR$/renwen_server/renwen_server.iml" />
       <module fileurl="file://$PROJECT_DIR$/renwen_spit/renwen_spit.iml" filepath="$PROJECT_DIR$/renwen_spit/renwen_spit.iml" />
       <module fileurl="file://$PROJECT_DIR$/renwen_user/renwen_user.iml" filepath="$PROJECT_DIR$/renwen_user/renwen_user.iml" />
     </modules>

@@ -85,6 +85,8 @@ public class SpitController {
 	 */
 	@PostMapping()
 	public Result add(@RequestBody Spit spit){
+		Claims claims = jwtUtil.parseJWT(spit.getUserid());
+		spit.setUserid(claims.getId());
 		spitService.add(spit);
 		return new Result(true,StatusCode.OK,"增加成功");
 	}

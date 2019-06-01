@@ -17,12 +17,12 @@ public class User implements Serializable{
 	private String id;//ID
 
 
-	
+	private String city;
 	private String mobile;//手机号码
 	private String password;//密码
 	private String nickname;//昵称
 	private String sex;//性别
-	private java.util.Date birthday;//出生年月日
+	private String birthday;//出生年月日
 	private String avatar;//头像
 	private String email;//E-Mail
 	private java.util.Date regdate;//注册日期
@@ -34,7 +34,14 @@ public class User implements Serializable{
 	private String qq;//QQ
 	private String org;//社团
 
-	
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -70,10 +77,10 @@ public class User implements Serializable{
 		this.sex = sex;
 	}
 
-	public java.util.Date getBirthday() {
+	public String getBirthday() {
 		return birthday;
 	}
-	public void setBirthday(java.util.Date birthday) {
+	public void setBirthday(String birthday) {
 		this.birthday = birthday;
 	}
 

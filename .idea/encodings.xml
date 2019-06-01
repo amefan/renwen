@@ -4,8 +4,9 @@
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/renwen_article" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/renwen_common" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/renwen_friend" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/renwen_eureka" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/renwen_gathering" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/renwen_server" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/renwen_spit" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/renwen_user" charset="UTF-8" />
   </component>

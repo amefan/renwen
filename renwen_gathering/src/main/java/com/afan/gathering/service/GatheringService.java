@@ -31,7 +31,7 @@ import com.afan.gathering.pojo.Gathering;
  *
  */
 @Service
-public class GatheringService {
+public class   GatheringService {
 
 	@Autowired
 	private GatheringDao gatheringDao;

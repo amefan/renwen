@@ -10,10 +10,12 @@
         <module>renwen_common</module>
         <module>renwen_user</module>
 		<module>renwen_article</module>
-		<module>renwen_friend</module>
+
 		<module>renwen_gathering</module>
 		<module>renwen_spit</module>
-    </modules>
+		<module>renwen_server</module>
+
+	</modules>
     <packaging>pom</packaging>
 	<name>renwen_parent</name>
     <parent>
@@ -40,9 +42,25 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!--<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-dependencies</artifactId>
+			<version>Finchley.SR2</version>
+			<type>pom</type>
 
+		</dependency>-->
 	</dependencies>
-
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>Finchley.M9</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<build>
 		<plugins>
 			<plugin>
@@ -53,14 +71,14 @@
 	</build>
 
 	<repositories>
-		<repository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>https://repo.spring.io/snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
+		<!--<repository>-->
+			<!--<id>spring-snapshots</id>-->
+			<!--<name>Spring Snapshots</name>-->
+			<!--<url>https://repo.spring.io/snapshot</url>-->
+			<!--<snapshots>-->
+				<!--<enabled>true</enabled>-->
+			<!--</snapshots>-->
+		<!--</repository>-->
 		<repository>
 			<id>spring-milestones</id>
 			<name>Spring Milestones</name>

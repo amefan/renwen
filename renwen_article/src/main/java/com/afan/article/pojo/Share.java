@@ -32,9 +32,25 @@ public class Share implements Serializable{
 	private Integer thumbup;//点赞数
 	private Integer comment;//评论数
 	private String state;//审核状态
+	private String username;//审核状态
+	private String avatar;//审核状态
 
+	public String getUsername() {
+		return username;
+	}
 
-	
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
 	public String getId() {
 		return id;
 	}

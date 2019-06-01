@@ -7,6 +7,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.afan.user.UserApplication;
 import com.afan.user.utils.SmsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -150,10 +151,7 @@ public class UserService {
 			@Override
 			public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicateList = new ArrayList<Predicate>();
-                // ID
-                if (searchMap.get("id")!=null && !"".equals(searchMap.get("id"))) {
-                	predicateList.add(cb.like(root.get("id").as(String.class), "%"+(String)searchMap.get("id")+"%"));
-                }
+
                 // 手机号码
                 if (searchMap.get("mobile")!=null && !"".equals(searchMap.get("mobile"))) {
                 	predicateList.add(cb.like(root.get("mobile").as(String.class), "%"+(String)searchMap.get("mobile")+"%"));
@@ -191,8 +189,8 @@ public class UserService {
                 	predicateList.add(cb.like(root.get("major").as(String.class), "%"+(String)searchMap.get("major")+"%"));
                 }
                 // QQ
-                if (searchMap.get("qq")!=null && !"".equals(searchMap.get("qq"))) {
-                	predicateList.add(cb.like(root.get("qq").as(String.class), "%"+(String)searchMap.get("qq")+"%"));
+                if (searchMap.get("city")!=null && !"".equals(searchMap.get("city"))) {
+                	predicateList.add(cb.like(root.get("city").as(String.class), "%"+(String)searchMap.get("city")+"%"));
                 }
                 // 社团
                 if (searchMap.get("org")!=null && !"".equals(searchMap.get("org"))) {
@@ -241,5 +239,26 @@ public class UserService {
 			return user;
 		}
 		return null;
+	}
+
+	public List<User> GetOnlineUser(){
+		Set<String> sets = UserApplication.sessionMap.keySet();
+		List<User> list = new ArrayList<>();
+		for (String set : sets) {
+
+			User user = userDao.findUserByNickname(set);
+			System.out.println(user);
+			list.add(user);
+
+		}
+		return list;
+	}
+
+	public boolean checkPhone(String phone) {
+		User us = userDao.findByMobile(phone);
+		if(us==null){
+			return false;
+		}
+		return true;
 	}
 }
