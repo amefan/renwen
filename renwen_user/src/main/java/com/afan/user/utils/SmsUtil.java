@@ -42,8 +42,8 @@ public class SmsUtil {
      * @throws ClientException
      */
     public static SendSmsResponse sendSms(String mobile,String code) throws ClientException {
-        String accessKeyId ="LTAIKAYyk0qZmJdQ";
-        String accessKeySecret = "MVeKLK5f2nWG3hD6ZFuDiw60mIi4dY";
+        String accessKeyId ="LTAIKAYyk0qZmJdQ-1";
+        String accessKeySecret = "MVeKLK5f2nWG3hD6ZFuDiw60mIi4dY-1";
         //可自助调整超时时间
         System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
         System.setProperty("sun.net.client.defaultReadTimeout", "10000");
